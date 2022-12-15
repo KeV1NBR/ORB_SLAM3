@@ -192,6 +192,8 @@ public:
     void InsertTrackTime(double& time);
 #endif
 
+    int GetMatchesPointsNum();
+
 private:
 
     void SaveAtlas(int type);

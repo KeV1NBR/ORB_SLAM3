@@ -25,6 +25,8 @@
 #include<thread>
 #include<mutex>
 
+
+
 #include<ros/ros.h>
 #include<cv_bridge/cv_bridge.h>
 #include<sensor_msgs/Imu.h>
@@ -138,9 +140,9 @@ int main(int argc, char **argv)
     }
 
   // Maximum delay, 5 seconds
-  ros::Subscriber sub_imu = n.subscribe("/imu", 1000, &ImuGrabber::GrabImu, &imugb); 
-  ros::Subscriber sub_img_left = n.subscribe("/camera/left/image_raw", 100, &ImageGrabber::GrabImageLeft,&igb);
-  ros::Subscriber sub_img_right = n.subscribe("/camera/right/image_raw", 100, &ImageGrabber::GrabImageRight,&igb);
+  ros::Subscriber sub_imu = n.subscribe("/camera/imu", 1000, &ImuGrabber::GrabImu, &imugb); 
+  ros::Subscriber sub_img_left = n.subscribe("/camera/fisheye1/image_raw", 100, &ImageGrabber::GrabImageLeft,&igb);
+  ros::Subscriber sub_img_right = n.subscribe("/camera/fisheye2/image_raw", 100, &ImageGrabber::GrabImageRight,&igb);
 
   std::thread sync_thread(&ImageGrabber::SyncWithImu,&igb);
 
@@ -267,8 +269,10 @@ void ImageGrabber::SyncWithImu()
         cv::remap(imRight,imRight,M1r,M2r,cv::INTER_LINEAR);
       }
 
-      mpSLAM->TrackStereo(imLeft,imRight,tImLeft,vImuMeas);
-
+      Sophus::SE3f pos = mpSLAM->TrackStereo(imLeft,imRight,tImLeft,vImuMeas);
+      int mp =  mpSLAM->GetMatchesPointsNum();
+      cout<<"orb num: "<<mp<<endl;
+      cout<<"pos: " << pos.matrix() <<endl;
       std::chrono::milliseconds tSleep(1);
       std::this_thread::sleep_for(tSleep);
     }

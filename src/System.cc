@@ -1545,5 +1545,9 @@ string System::CalculateCheckSum(string filename, int type)
     return checksum;
 }
 
+int System::GetMatchesPointsNum(){
+    return mpFrameDrawer->getLeftMatchesNum() + mpFrameDrawer->getRightMatchesNum();
+}
+
 } //namespace ORB_SLAM
 

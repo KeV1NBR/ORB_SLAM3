@@ -50,6 +50,9 @@ public:
     cv::Mat DrawFrame(float imageScale=1.f);
     cv::Mat DrawRightFrame(float imageScale=1.f);
 
+    int getLeftMatchesNum();
+    int getRightMatchesNum();
+
     bool both;
 
 protected:
@@ -84,6 +87,8 @@ protected:
     map<long unsigned int, cv::Point2f> mmProjectPoints;
     map<long unsigned int, cv::Point2f> mmMatchedInImage;
 
+    int leftMatchesNum;
+    int rightMatchesNum;
 };
 
 } //namespace ORB_SLAM

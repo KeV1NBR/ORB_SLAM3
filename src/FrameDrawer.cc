@@ -32,6 +32,9 @@ FrameDrawer::FrameDrawer(Atlas* pAtlas):both(false),mpAtlas(pAtlas)
     mState=Tracking::SYSTEM_NOT_READY;
     mIm = cv::Mat(480,640,CV_8UC3, cv::Scalar(0,0,0));
     mImRight = cv::Mat(480,640,CV_8UC3, cv::Scalar(0,0,0));
+
+    leftMatchesNum = 0;
+    rightMatchesNum = 0;
 }
 
 cv::Mat FrameDrawer::DrawFrame(float imageScale)
@@ -194,6 +197,7 @@ cv::Mat FrameDrawer::DrawFrame(float imageScale)
             }
         }
     }
+    this->leftMatchesNum = mnTracked;
 
     cv::Mat imWithInfo;
     DrawTextInfo(im,state, imWithInfo);
@@ -320,6 +324,7 @@ cv::Mat FrameDrawer::DrawRightFrame(float imageScale)
         }
     }
 
+    this->rightMatchesNum = mnTracked;
     cv::Mat imWithInfo;
     DrawTextInfo(im,state, imWithInfo);
 
@@ -436,4 +441,11 @@ void FrameDrawer::Update(Tracking *pTracker)
     mState=static_cast<int>(pTracker->mLastProcessedState);
 }
 
+int FrameDrawer::getLeftMatchesNum(){
+    return this->leftMatchesNum;
+}
+
+int FrameDrawer::getRightMatchesNum(){
+    return this->rightMatchesNum;
+}
 } //namespace ORB_SLAM
